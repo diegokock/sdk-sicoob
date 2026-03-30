@@ -1,0 +1,22 @@
+{
+  "name": "diegokock/sdk-sicoob",
+  "description": "SDK PHP para integração com as APIs do Sicoob",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Diegokock\\SdkSicoob\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Diego Kock",
+      "email": "diegokock90@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/guzzle": "^7.5.0"
+  }
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Diegokock\SdkSicoob;
+namespace Dassis\SdkSicoob;
 
 class Configuration
 {

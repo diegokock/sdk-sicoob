@@ -1,10 +1,10 @@
 <?php
 
-namespace Diegokock\SdkSicoob\Helpers;
+namespace Dassis\SdkSicoob\Helpers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Diegokock\SdkSicoob\Configuration;
+use Dassis\SdkSicoob\Configuration;
 
 class CallApi
 {

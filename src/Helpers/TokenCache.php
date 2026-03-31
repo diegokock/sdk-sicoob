@@ -1,6 +1,6 @@
 <?php
 
-namespace Diegokock\SdkSicoob\Helpers;
+namespace Dassis\SdkSicoob\Helpers;
 
 /**
  * Cache de token em memória por client_id.

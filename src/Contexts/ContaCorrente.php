@@ -1,10 +1,10 @@
 <?php
 
-namespace Diegokock\SdkSicoob\Contexts;
+namespace Dassis\SdkSicoob\Contexts;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Diegokock\SdkSicoob\Configuration;
-use Diegokock\SdkSicoob\Helpers\CallApi;
+use Dassis\SdkSicoob\Configuration;
+use Dassis\SdkSicoob\Helpers\CallApi;
 
 class ContaCorrente extends CallApi
 {

@@ -1,18 +1,18 @@
 {
-  "name": "diegokock/sdk-sicoob",
+  "name": "dassis/sdk-sicoob",
   "description": "SDK PHP para integração com as APIs do Sicoob",
   "type": "library",
   "license": "MIT",
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "Diegokock\\SdkSicoob\\": "src/"
+      "Dassis\\SdkSicoob\\": "src/"
     }
   },
   "authors": [
     {
-      "name": "Diego Kock",
-      "email": "diegokock90@gmail.com"
+      "name": "Diego Kock de Assis",
+      "email": "Dassis90@gmail.com"
     }
   ],
   "require": {

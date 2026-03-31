@@ -1,11 +1,11 @@
 <?php
 
-namespace diegokock\SdkSicoob\Helpers;
+namespace Diegokock\SdkSicoob\Helpers;
 
 /**
  * Cache de token em memória por client_id.
  * 
- * Token do Sicoob dura 300s — renovamos com 30s de margem.
+ * Token do Sicoob dura 300s — renova com 30s de margem.
  */
 class TokenCache
 {
@@ -34,5 +34,10 @@ class TokenCache
         $entry->expires_at = time() + ($token->expires_in ?? 300);
 
         self::$cache[$clientId] = $entry;
+    }
+
+    public static function clear(string $clientId): void
+    {
+        unset(self::$cache[$clientId]);
     }
 }

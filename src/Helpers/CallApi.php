@@ -1,10 +1,10 @@
 <?php
 
-namespace diegokock\SdkSicoob\Helpers;
+namespace Diegokock\SdkSicoob\Helpers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use diegokock\SdkSicoob\Configuration;
+use Diegokock\SdkSicoob\Configuration;
 
 class CallApi
 {
@@ -39,6 +39,7 @@ class CallApi
             'form_params' => [
                 'grant_type' => 'client_credentials',
                 'client_id'  => $this->config->getClientId(),
+                'scope'      => 'cco_consulta cco_transferencias',
             ],
         ]);
 
@@ -71,9 +72,10 @@ class CallApi
 
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$token->access_token}",
-                'Content-Type'  => 'application/json',
-                'client_id'     => $this->config->getClientId(),
+                'Authorization'   => "Bearer {$token->access_token}",
+                'Content-Type'    => 'application/json',
+                'client_id'       => $this->config->getClientId(),
+                'X-IBM-Client-Id' => $this->config->getClientId(),
             ],
         ];
 

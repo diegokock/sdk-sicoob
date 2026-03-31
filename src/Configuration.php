@@ -1,6 +1,6 @@
 <?php
 
-namespace diegokock\SdkSicoob;
+namespace Diegokock\SdkSicoob;
 
 class Configuration
 {
@@ -23,7 +23,7 @@ class Configuration
         string $clientId,
         string $certPath,
         string $certPassword,
-        bool   $sandbox = false
+        bool   $sandbox = true
     ) {
         $this->clientId     = $clientId;
         $this->certPath     = $certPath;

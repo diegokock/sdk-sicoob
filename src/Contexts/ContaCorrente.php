@@ -34,10 +34,10 @@ class ContaCorrente extends CallApi
         bool $agrupaCNAB  = false
     ): object {
         $query = array_filter([
-            'numeroConta' => $numeroConta,
-            'diaInicial'  => $diaInicial,
-            'diaFinal'    => $diaFinal,
-            'agrupaCNAB'  => $agrupaCNAB ? 'true' : null,
+            'numeroContaCorrente' => $numeroConta,
+            'diaInicial'          => $diaInicial,
+            'diaFinal'            => $diaFinal,
+            'agruparCNAB'         => $agrupaCNAB ? 'true' : null,
         ], fn($v) => !is_null($v));
 
         return $this->call(
@@ -57,7 +57,7 @@ class ContaCorrente extends CallApi
     {
         return $this->call(
             '/conta-corrente/v4/saldo',
-            ['numeroConta' => $numeroConta]
+            ['numeroContaCorrente' => $numeroConta]
         );
     }
 }

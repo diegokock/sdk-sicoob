@@ -1,0 +1,7 @@
+test.php
+vendor/
+crt/
+*.pfx
+*.pem
+.env
+composer.lock

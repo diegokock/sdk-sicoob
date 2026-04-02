@@ -5,3 +5,4 @@ crt/
 *.pem
 .env
 composer.lock
+gerar_senha.php

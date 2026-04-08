@@ -12,6 +12,7 @@ class Configuration
     private string $certPath;
     private string $certPassword;
     private bool   $sandbox;
+    private string $scope;
 
     /**
      * @param string $clientId     Client ID gerado no portal developers.sicoob.com.br
@@ -23,12 +24,19 @@ class Configuration
         string $clientId,
         string $certPath,
         string $certPassword,
-        bool   $sandbox = true
+        bool   $sandbox = false,
+        string $scope   = 'cco_consulta cco_transferencias'
     ) {
         $this->clientId     = $clientId;
         $this->certPath     = $certPath;
         $this->certPassword = $certPassword;
         $this->sandbox      = $sandbox;
+        $this->scope        = $scope;
+    }
+
+    public function getScope(): string
+    {
+        return $this->scope;
     }
 
     public function getClientId(): string

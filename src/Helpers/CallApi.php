@@ -39,7 +39,7 @@ class CallApi
             'form_params' => [
                 'grant_type' => 'client_credentials',
                 'client_id'  => $this->config->getClientId(),
-                'scope'      => 'cco_consulta cco_transferencias',
+                'scope'      => $this->config->getScope(),
             ],
         ]);
 
@@ -62,21 +62,22 @@ class CallApi
      */
     public function call(
         string  $endpoint,
-        ?array  $query  = null,
-        ?array  $body   = null,
-        string  $method = 'GET'
+        ?array  $query   = null,
+        ?array  $body    = null,
+        string  $method  = 'GET',
+        array   $headers = []      // headers extras
     ): object {
         $token       = $this->accessToken();
         $certOptions = $this->buildCertOptions();
         $client      = new Client($certOptions);
 
         $options = [
-            'headers' => [
+            'headers' => array_merge([
                 'Authorization'   => "Bearer {$token->access_token}",
                 'Content-Type'    => 'application/json',
                 'client_id'       => $this->config->getClientId(),
                 'X-IBM-Client-Id' => $this->config->getClientId(),
-            ],
+            ], $headers),
         ];
 
         if (!empty($query)) {

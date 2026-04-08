@@ -34,10 +34,10 @@ class ContaCorrente extends CallApi
         bool $agrupaCNAB  = false
     ): object {
         $query = array_filter([
-            'numeroContaCorrente' => $numeroConta,
             'diaInicial'          => $diaInicial,
             'diaFinal'            => $diaFinal,
             'agruparCNAB'         => $agrupaCNAB ? 'true' : null,
+            'numeroContaCorrente' => $numeroConta,
         ], fn($v) => !is_null($v));
 
         return $this->call(

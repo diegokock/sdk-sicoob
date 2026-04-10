@@ -10,16 +10,24 @@ class CallApi
 {
     protected Configuration $config;
 
+    private ?string $certTemp = null;
+    private ?string $keyTemp  = null;
+
     public function __construct(Configuration $config)
     {
         $this->config = $config;
     }
 
     /**
+     * Garante limpeza dos temporários ao destruir o objeto.
+     */
+    public function __destruct()
+    {
+        $this->cleanupTempFiles();
+    }
+
+    /**
      * Busca o token OAuth2 via client_credentials + mTLS.
-     * Usa cache — só vai ao Sicoob quando o token estiver expirado.
-     *
-     * @throws GuzzleException
      */
     public function accessToken(): object
     {
@@ -52,23 +60,16 @@ class CallApi
 
     /**
      * Executa uma chamada autenticada à API do Sicoob.
-     *
-     * @param string      $endpoint Caminho relativo ex: /conta-corrente/v4/extrato/3/2026
-     * @param array|null  $query    Parâmetros de query string
-     * @param array|null  $body     Body para requisições POST
-     * @param string      $method   GET, POST, etc.
-     *
-     * @throws GuzzleException
      */
     public function call(
         string  $endpoint,
         ?array  $query   = null,
         ?array  $body    = null,
         string  $method  = 'GET',
-        array   $headers = []      // headers extras
+        array   $headers = []
     ): object {
         $token       = $this->accessToken();
-        $certOptions = $this->buildCertOptions();
+        $certOptions = $this->buildCertOptions(); // reutiliza os mesmos arquivos temp
         $client      = new Client($certOptions);
 
         $options = [
@@ -94,16 +95,27 @@ class CallApi
             $options
         );
 
+        // Limpa imediatamente após uso
+        $this->cleanupTempFiles();
+
         return json_decode($response->getBody()->getContents());
     }
 
     /**
      * Converte o .pfx para arquivos PEM temporários.
-     * O Guzzle não aceita .pfx diretamente — precisa de cert + key separados.
-     * Os temporários são apagados automaticamente no shutdown do PHP.
+     * Reutiliza os mesmos arquivos se já foram criados nesta instância.
      */
     private function buildCertOptions(): array
     {
+        // Reutiliza se já criados nesta instância
+        if ($this->certTemp !== null && file_exists($this->certTemp) &&
+            $this->keyTemp  !== null && file_exists($this->keyTemp)) {
+            return [
+                'cert'    => $this->certTemp,
+                'ssl_key' => $this->keyTemp,
+            ];
+        }
+
         $pfxData = file_get_contents($this->config->getCertPath());
 
         if ($pfxData === false) {
@@ -119,21 +131,38 @@ class CallApi
             );
         }
 
-        $certTemp = tempnam(sys_get_temp_dir(), 'sicoob_cert_');
-        $keyTemp  = tempnam(sys_get_temp_dir(), 'sicoob_key_');
+        $this->certTemp = tempnam(sys_get_temp_dir(), 'sicoob_cert_');
+        $this->keyTemp  = tempnam(sys_get_temp_dir(), 'sicoob_key_');
 
-        file_put_contents($certTemp, $certs['cert']);
-        file_put_contents($keyTemp, $certs['pkey']);
+        file_put_contents($this->certTemp, $certs['cert']);
+        file_put_contents($this->keyTemp, $certs['pkey']);
 
-        // Garante limpeza dos temporários ao final da execução
+        // Mantém o register_shutdown como segurança extra
+        $certTemp = $this->certTemp;
+        $keyTemp  = $this->keyTemp;
         register_shutdown_function(function () use ($certTemp, $keyTemp) {
-            @unlink($certTemp);
-            @unlink($keyTemp);
+            if (file_exists($certTemp)) @unlink($certTemp);
+            if (file_exists($keyTemp))  @unlink($keyTemp);
         });
 
         return [
-            'cert'    => $certTemp,
-            'ssl_key' => $keyTemp,
+            'cert'    => $this->certTemp,
+            'ssl_key' => $this->keyTemp,
         ];
+    }
+
+    /**
+     * Remove os arquivos temporários imediatamente.
+     */
+    private function cleanupTempFiles(): void
+    {
+        if ($this->certTemp !== null && file_exists($this->certTemp)) {
+            @unlink($this->certTemp);
+            $this->certTemp = null;
+        }
+        if ($this->keyTemp !== null && file_exists($this->keyTemp)) {
+            @unlink($this->keyTemp);
+            $this->keyTemp = null;
+        }
     }
 }
